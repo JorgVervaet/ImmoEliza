@@ -22,26 +22,26 @@ headers = {
     'Connection': 'keep-alive',
 }
 
-url = "https://www.immoweb.be/en/search/house-and-apartment/for-sale?countries=BE"
-#immosite = requests.get(url, headers=headers)
 options.add_argument('--start-maximized')
 options.add_argument('--disable-infobars')
 ser = Service("/Users/Jorg/Drivers/chromedriver") 
 driver = webdriver.Chrome(options=options,service=ser)
-driver.implicitly_wait(30)
-driver.get(url)
+driver.implicitly_wait(3)
 
-print(driver.current_url)
-
-soup = BeautifulSoup(driver.page_source)
 
 urls = []
 for page in range(0, 333):
-    urls = ("https://www.immoweb.be/en/search/house-and-apartment/for-sale?countries=BE&page=",page,"&orderBy=relevance")
-    #p = p.replace(" ", "")
-for link in soup.find_all("a", attrs={"class":"card__title-link"}):
-    urls.append(link.get('href'))
+    p = f"https://www.immoweb.be/en/search/house-and-apartment/for-sale?countries=BE&page={page}&orderBy=relevance"
+    driver.get(p)
+    soup = BeautifulSoup(driver.page_source)
+    print(page)
+    for link in soup.find_all("a", attrs={"class":"card__title-link"}):
+        urls.append(link.get('href'))
+        print(link.get('href'))
 
-print(urls)
 
+driver.close()
+
+with open(r'/Users/Jorg/BeCode/ImmoEliza/data/Links.txt', 'w') as fp:
+    fp.write('\n'.join(urls))   
     
